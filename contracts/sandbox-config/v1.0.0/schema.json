@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tidereach/interlock/contracts/sandbox-config/v1.0.0/schema.json",
+  "title": "sandbox-config v1.0.0",
+  "description": "Static integrity record for an execution-plane sandbox's configuration files. Published by the airlock release pipeline; consumed by interlock's check-sandbox subcommand and SandboxCheck class. The manifest's combined_hash is the integrity-input source for integrity-inputs/v1.0.0's sandbox_config_hash entry. See README.md for the v1 file set, combined-hash canonicalization, and the open-backend rationale.",
+  "type": "object",
+  "required": ["manifest_version", "backend", "files", "combined_hash", "created_at"],
+  "additionalProperties": false,
+  "properties": {
+    "manifest_version": {
+      "const": "1.0.0",
+      "description": "Locked to the schema directory version. Consumers refuse mismatched values; bumping requires a contract minor or major release."
+    },
+    "backend": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Sandbox backend identifier. Open string (NOT enum) per interlock's interlockSettings.sandbox_backend: the closed Literal was removed so new backends do not require an interlock release. Backend values are conventionally short kebab-case (e.g., 'podman-compose'). See README §Backend convention."
+    },
+    "files": {
+      "type": "object",
+      "minProperties": 1,
+      "description": "Map of sandbox config file path to SHA-256 lowercase hex digest of the file's bytes. Paths are relative to the sandbox config root the backend exposes (airlock convention: paths under its infra/sandbox/ tree). check-sandbox re-hashes each file at the matching path and asserts the digest matches; the v1 expected set is listed in README §The v1 file set.",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "combined_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 lowercase hex of the canonical-bytes serialization of the `files` object (sorted keys, UTF-8, no insignificant whitespace, no trailing newline). This is the value pinned by operators in interlockSettings.sandbox_config_hash; this is also the integrity-input bytes-source for integrity-inputs/v1.0.0's sandbox_config_hash entry. Stable across manifest_version / backend / created_at changes because it covers only the `files` map."
+    },
+    "created_at": {
+      "type": "number",
+      "description": "Epoch seconds UTC at which the manifest was published by the airlock release pipeline. Audit-correlation only; does NOT feed combined_hash."
+    }
+  }
+}
