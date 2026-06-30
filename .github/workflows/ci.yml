@@ -26,8 +26,8 @@ jobs:
   pr-title-lint:
     uses: tidereach/hull/.github/workflows/pr-title-lint.yml@main
 
-  signature-verify:
-    uses: tidereach/hull/.github/workflows/signature-verify.yml@main
+  # signature-verify retired 2026-06-30 per tidereach/hull `ROADMAP.md` item 8
+  # (commit signing deferred to v2). Re-wire this job when item 8 re-opens.
 
   # ---------------------------------------------------------------------------
   # Uncomment as the layer's source tree lands (Stage 2 implementation)
