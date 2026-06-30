@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tidereach/interlock/contracts/audit-envelope/v1.0.0/schema.json",
+  "title": "audit-envelope v1.0.0",
+  "description": "Hash-chained audit record envelope. Every call to interlock's AuditChain.append() emits exactly one record matching this schema. The envelope is exhaustive: any field a consumer needs to act on must be named here. Event names are governed by governance/audit-event-ownership.md (not enum-locked in this schema so adding events does not churn the contract). See README.md for field semantics, hash-algorithm pin, and chain-genesis convention.",
+  "type": "object",
+  "required": [
+    "seq",
+    "prev_hash",
+    "record_hash",
+    "wall_time",
+    "monotonic_ns",
+    "event",
+    "emitter",
+    "labels",
+    "categories",
+    "confidence",
+    "pattern_hash",
+    "model_digest",
+    "prompt_hash"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic sequence number within the chain. The chain_genesis record is seq=0; each subsequent record increments by one."
+    },
+    "prev_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256 of the previous record_hash. The chain_genesis record uses 64 zero hex characters (see README §Chain genesis)."
+    },
+    "record_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256 of this record's canonical serialization (see README §Canonical serialization)."
+    },
+    "wall_time": {
+      "type": "number",
+      "description": "Wall-clock timestamp (epoch seconds, UTC) at which AuditChain.append() ran. Not monotonic across reboots."
+    },
+    "monotonic_ns": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Process-local monotonic clock at append time, in nanoseconds (Python time.monotonic_ns()). Only ordered within a single process lifetime."
+    },
+    "event": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Event name. Namespace governed by governance/audit-event-ownership.md; this schema does not enum-lock it so adding events is a governance change, not a contract bump."
+    },
+    "emitter": {
+      "type": "string",
+      "enum": ["interlock", "sieve", "arbiter", "airlock"],
+      "description": "Layer name that called AuditChain.append(). Required so audit-verify can enforce the cross-layer ownership rule (e.g., gate_frozen must have emitter='sieve')."
+    },
+    "labels": {
+      "type": "object",
+      "description": "Event-specific structured payload. Per-event shape documented alongside the event in governance/audit-event-ownership.md. Open object: keys and value types are event-defined.",
+      "additionalProperties": true
+    },
+    "categories": {
+      "type": ["array", "null"],
+      "items": { "type": "string" },
+      "description": "Sieve classifier categories for events that carry a verdict; null otherwise."
+    },
+    "confidence": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Sieve classifier confidence in [0, 1] for events that carry a verdict; null otherwise."
+    },
+    "pattern_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256 of the pattern_table HashInput active when the event was emitted (see integrity-inputs/v1.0.0); null when not applicable."
+    },
+    "model_digest": {
+      "type": ["string", "null"],
+      "description": "Raw model manifest digest of the model_digest HashInput active when the event was emitted (see integrity-inputs/v1.0.0). Format is whatever the Ollama manifest endpoint returns; not necessarily hex SHA-256. Null when not applicable."
+    },
+    "prompt_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Lowercase hex SHA-256 of the prompt_template HashInput active when the event was emitted (see integrity-inputs/v1.0.0); null when not applicable."
+    }
+  }
+}

@@ -18,7 +18,7 @@ Example: `interlock-contracts@v0.4.0` might contain `session-stream-jsonl/v1.0.0
 |---|---|---|
 | `integrity-inputs/v1.0.0/` | **Shipped (Stage 2 pre-parallel)** | 3 pinned + 4 TBD entries |
 | `session-stream-jsonl/v1.0.0/` | **Shipped (Stage 2 pre-parallel, release-blocking)** | 7-field exhaustive schema |
-| `audit-envelope/` | Pending Stage 2 implementation | |
+| `audit-envelope/v1.0.0/` | **Shipped (Stage 2)** | 13-field hash-chained record envelope; SHA-256 lowercase hex; `emitter` enum locks cross-layer ownership |
 | `hook-manifest/` | Pending Stage 2 implementation | |
 | `sandbox-config/` | Pending Stage 2 implementation | |
 | `freeze-file/` | Pending Stage 2 implementation | |
