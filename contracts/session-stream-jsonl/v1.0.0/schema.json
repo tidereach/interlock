@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tidereach/interlock/contracts/session-stream-jsonl/v1.0.0/schema.json",
+  "title": "session-stream-jsonl v1.0.0",
+  "description": "JSONL record written by the agent CLI adapter into the airlock session-stream volume. Exactly these fields — no extra/raw_payload catch-all. See README.md for field semantics.",
+  "type": "object",
+  "required": ["ts", "session_id", "source", "event_type"],
+  "additionalProperties": false,
+  "properties": {
+    "ts": {
+      "type": "number",
+      "description": "Wall-clock timestamp (epoch seconds, UTC) at which the agent CLI emitted the record."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Agent CLI session identifier; opaque to interlock."
+    },
+    "source": {
+      "type": "string",
+      "enum": ["claude", "copilot"],
+      "description": "Which agent CLI emitted the record; selects the per-CLI adapter."
+    },
+    "event_type": {
+      "type": "string",
+      "description": "Normalised event type the adapter assigns: user, assistant, tool_call, tool_result, system, …"
+    },
+    "transcript_path": {
+      "type": ["string", "null"],
+      "description": "Source transcript file when the adapter parsed an on-disk record; null for synthesised entries."
+    },
+    "assistant_text": {
+      "type": ["string", "null"],
+      "description": "Assistant turn text the adapter extracted; null on non-assistant records."
+    },
+    "correlation_id": {
+      "type": ["string", "null"],
+      "description": "Arbiter context_id propagated through interlock's in-process verdict map; null when no verdict precedes the record."
+    }
+  }
+}

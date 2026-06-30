@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/tidereach/interlock/contracts/integrity-inputs/v1.0.0/schema.json",
+  "title": "integrity-inputs v1.0.0",
+  "description": "Canonical HashInput names and one-line serialization specs for interlock's IntegrityHasher. Each entry names one input to the integrity hash; layers implement the HashInput protocol against this list.",
+  "type": "object",
+  "properties": {
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "owner", "serialization", "status"],
+        "properties": {
+          "name": { "type": "string" },
+          "owner": { "type": "string", "description": "Layer repo that implements this HashInput." },
+          "serialization": { "type": "string", "description": "One-line spec for how the value is serialised to bytes before hashing." },
+          "status": { "type": "string", "enum": ["pinned", "tbd"], "description": "pinned = spec locked; tbd = graduation condition stated in README.md." }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "pinned_entries": [
+      {
+        "name": "pattern_table",
+        "owner": "tidereach/sieve",
+        "serialization": "Sorted-keys JSON of the pattern registry, UTF-8 encoded.",
+        "status": "pinned"
+      },
+      {
+        "name": "model_digest",
+        "owner": "tidereach/sieve",
+        "serialization": "Raw model manifest bytes as returned by the Ollama API manifest endpoint.",
+        "status": "pinned"
+      },
+      {
+        "name": "prompt_template",
+        "owner": "tidereach/sieve",
+        "serialization": "UTF-8 encoded template string, NFC-normalised.",
+        "status": "pinned"
+      }
+    ]
+  }
+}

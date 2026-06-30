@@ -1,0 +1,53 @@
+# Canonical pre-commit baseline — copied from tidereach/hull at bootstrap.
+# Add interlock-specific hooks below the shared baseline (e.g., ruff, mypy).
+# Update SHAs via `.venv/bin/pre-commit autoupdate` and review every bump.
+#
+# Installation:
+#   python3 -m venv .venv
+#   .venv/bin/pip install pre-commit
+#   .venv/bin/pre-commit install
+
+repos:
+  # -------------------------------------------------------------------------
+  # Decision 18(a) — secrets scanner; same tool as CI for parity.
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/betterleaks/betterleaks
+    rev: 6475f3fe49bf893d7713cd501131176a051f8d10  # v1.6.0
+    hooks:
+      - id: betterleaks
+
+  # -------------------------------------------------------------------------
+  # Hygiene baseline
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b  # v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: check-toml
+      - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=512"]
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+  # -------------------------------------------------------------------------
+  # uv lockfile freshness
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 06c8dbc924504e76c7ba32c5735e55c9e5e1c266  # 0.5.31
+    hooks:
+      - id: uv-lock
+
+  # -------------------------------------------------------------------------
+  # mypy — uncomment once src/ has real implementations
+  # -------------------------------------------------------------------------
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: fc0f09a29bb495f4a91f00266155d6282d52485d  # v1.20.2
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies: []
+  #       args: ["--config-file=pyproject.toml"]
