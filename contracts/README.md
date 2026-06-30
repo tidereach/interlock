@@ -14,15 +14,19 @@ Example: `interlock-contracts@v0.4.0` might contain `session-stream-jsonl/v1.0.0
 
 ## Contracts in this repo
 
-| Contract | Status | Notes |
-|---|---|---|
-| `integrity-inputs/v1.0.0/` | **Shipped (Stage 2 pre-parallel)** | 3 pinned + 4 TBD entries |
-| `session-stream-jsonl/v1.0.0/` | **Shipped (Stage 2 pre-parallel, release-blocking)** | 7-field exhaustive schema |
-| `audit-envelope/v1.0.0/` | **Shipped (Stage 2)** | 13-field hash-chained record envelope; SHA-256 lowercase hex; `emitter` enum locks cross-layer ownership |
-| `hook-manifest/v1.0.0/` | **Shipped (Stage 2)** | 5-field static integrity record for installed hook scripts; SHA-256 lowercase hex; Ed25519 pubkey for `hook_identity` audit-envelope events |
-| `sandbox-config/` | Pending Stage 2 implementation | |
-| `freeze-file/` | Pending Stage 2 implementation | |
-| `engine-ipc/` | Pending Stage 2 implementation | |
+Each contract lives under `contracts/<name>/v<X.Y.Z>/`. The presence of a version directory means the contract has been authored at that version; for per-contract status detail, read the contract's `CHANGELOG.md`. For the aggregate cross-repo progress overview, see `STATE.md` in `tidereach/hull`.
+
+The Stage 2 release-blocking set per `migration/MAIN.md § 11 Stage 2 gate` (in `tidereach/hull`):
+
+- `integrity-inputs/`
+- `session-stream-jsonl/`
+- `audit-envelope/`
+- `hook-manifest/`
+- `sandbox-config/`
+- `freeze-file/`
+- `engine-ipc/`
+
+> **Why this list has no per-contract status column.** Tables with one row per contract are a parallel-PR conflict surface: every PR that ships a contract edits a row, and git's line-based merge cannot tell adjacent independent rows apart. The list above is the fixed Stage 2 set and rarely changes; per-contract status lives in each contract's own directory. See `AGENTS.md` in this directory for the per-PR-dir discipline.
 
 ## Changelog requirement
 
