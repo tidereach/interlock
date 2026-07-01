@@ -39,7 +39,9 @@ If any hull-side default changes, the change lands in `hull/AGENTS.md` and this 
 
 Layer names (`interlock`, `sieve`, `arbiter`, `airlock`, `jettison`, `hull`, `drydock`) may be renamed by stakeholders. Use layer names in **documentation** only; avoid them in Python identifiers, env vars, and settings keys — a doc rename is search-and-replace; a code rename is a breaking change for consumers.
 
+<!-- legacy-name-allowed -->
 The `legacy-name-guard` CI job enforces the same discipline for pre-migration `spektralia` names.
+<!-- /legacy-name-allowed -->
 
 ## Gotchas
 
