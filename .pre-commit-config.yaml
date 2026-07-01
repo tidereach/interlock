@@ -43,6 +43,16 @@ repos:
       - id: uv-lock
 
   # -------------------------------------------------------------------------
+  # Legacy-name grep gate — same script as the legacy-name-guard CI job
+  # (MAIN.md § 8 Constraint 6). Copied verbatim from tidereach/hull per
+  # docs/BOOTSTRAP.md "Copy .pre-commit-config.yaml verbatim".
+  # -------------------------------------------------------------------------
+  - repo: https://github.com/tidereach/hull
+    rev: 76abaf40a385117213f14a974218a805d1772683  # hull PR #162 — see hull/docs/CI.md "Pinning"
+    hooks:
+      - id: legacy-name-guard
+
+  # -------------------------------------------------------------------------
   # mypy — uncomment once src/ has real implementations
   # -------------------------------------------------------------------------
   # - repo: https://github.com/pre-commit/mirrors-mypy
